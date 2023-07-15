@@ -1,5 +1,7 @@
-from dataclasses import dataclass, fields
+from dataclasses import fields
 from typing import List
+
+from dacite import from_dict
 
 from .data_template import EligibleAd
 from .dbs import Database
@@ -14,17 +16,21 @@ class GetAds:
 
 
 class GetAdsFromDatabase(GetAds):
-    def get_eligible_ads(self, table_name: str, database: Database) -> List[EligibleAd]:
+    def __init__(self, table_name: str, database: Database):
+        self._table_name = table_name
+        self._database = database
+
+    def get_eligible_ads(self) -> List[EligibleAd]:
         try:
             eligible_ad_fields = fields(EligibleAd)
-            data = database.read(
-                table_name=table_name,
+            data = self._database.read(
+                table_name=self._table_name,
                 column_names=[
                     eligible_ad_field.name for eligible_ad_field in eligible_ad_fields
                 ],
                 condiction="WHERE status='True'",
             )
-            return [dataclass.from_dict(d, EligibleAd) for d in data]
+            return [from_dict(data_class=EligibleAd, data=d) for d in data]
         except Exception as e:
             log.error("Get eligible ads error: {}".format(e))
             return []

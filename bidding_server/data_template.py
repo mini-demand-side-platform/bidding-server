@@ -40,6 +40,9 @@ class FeaturesInfo:
     source_column_name: List[str]
     feature_function_type: List[str]
 
+    def __getitem__(self, key):
+        return getattr(self, key)
+
 
 @dataclass
 class OnlineFeatureInput:
@@ -50,7 +53,7 @@ class OnlineFeatureInput:
 
 @dataclass
 class EligibleAd:
-    ad_id: str
+    ad_id: int
     bidding_cpc: int
     advertiser: str
     banner_style: str

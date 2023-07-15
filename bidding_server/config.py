@@ -1,25 +1,6 @@
 import os
 
-from data_template import DBServerInfo
-
-feature_mapping = {
-    0: {"layout_style": "AB"},
-    1: {"layout_style": "RU"},
-    2: {"layout_style": "GY"},
-    3: {"layout_style": "MR"},
-    4: {"layout_style": "BK"},
-    5: {"layout_style": "BX"},
-    6: {"layout_style": "RZ"},
-    7: {"layout_style": "TY"},
-    8: {"category": "Shirt"},
-    9: {"layout_style": "DX"},
-}
-
-
-bidding_strategy = os.getenv("bidding_strategy", "cpc")
-
-get_ads_method = os.getenv("get_ads_method", "postgres")
-
+from .data_template import DBServerInfo
 
 oltp_server_info = DBServerInfo(
     host=os.getenv("oltp_host", "localhost"),
@@ -29,9 +10,13 @@ oltp_server_info = DBServerInfo(
     password=os.getenv("oltp_password", "dsppassword"),
 )
 
-feature_store_uri = os.getenv(
-    "feature_store_uri",
-    "http://localhost:8000/feature_store/{feature_store_id}/feature",
+list_feature_uri = os.getenv(
+    "list_feature_uri", "http://localhost:8000/feature_store/{feature_store_id}/feature"
 )
-
-model_uri = os.getenv("model_uri", "http://localhost:8000/model:predict")
+get_online_features_uri = os.getenv(
+    "get_online_features_uri", "http://localhost:8000/online_features"
+)
+model_uri = os.getenv("model_uri", "http://localhost:8002/model:predict")
+table_name = os.getenv("table_name", "ad")
+feature_store_id = os.getenv("feature_store_id", "cdc74d4c")
+default_ctr = float(os.getenv("default_ctr", 0.009905203839797677))

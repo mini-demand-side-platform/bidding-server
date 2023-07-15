@@ -2,7 +2,7 @@
 
 ```
 curl -X 'POST' \
-  'http://localhost:8000/bw_dsp' \
+  'http://localhost:8003/bw_dsp' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{

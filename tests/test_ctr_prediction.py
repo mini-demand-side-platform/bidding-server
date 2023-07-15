@@ -7,11 +7,12 @@ from bidding_server.data_template import BidRequest, EligibleAd, OnlineFeatureIn
 class TestCtrPrediction(TestCase):
     cp = PredictionServerWithFeatureStore(
         model_uri="http://localhost:8002/model:predict",
-        feature_store_uri="http://localhost:8000/feature_store/{feature_store_id}/feature",
+        list_feature_uri="http://localhost:8000/feature_store/{feature_store_id}/feature",
         feature_store_id="test_id",
+        get_online_features_uri="http://localhost:8000/online_features",
     )
 
-    def test_get_features(self):
+    def test_get_online_feature_input(self):
         test_ad = EligibleAd(
             ad_id=1228,
             bidding_cpc=1,
@@ -28,7 +29,9 @@ class TestCtrPrediction(TestCase):
             hist_ctr=0.00036614624,
             hist_cvr=6.790803e-05,
         )
-        res = self.cp._get_features(eligible_ad=test_ad, bid_request=test_bid_request)
+        res = self.cp._get_online_feature_input(
+            eligible_ad=test_ad, bid_request=test_bid_request
+        )
 
         test_features = OnlineFeatureInput(
             inputs=["MP", "MP", "MP", "MP", "MP", "MP", "MP", "MP", "Pullover", "MP"],

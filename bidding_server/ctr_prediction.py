@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import asdict
 from typing import List
 
 import requests
+from dacite import from_dict
 
 from .data_template import BidRequest, EligibleAd, FeaturesInfo, OnlineFeatureInput
 from .logger import get_logger
@@ -30,8 +31,8 @@ class PredictionServerWithFeatureStore(ABC):
         )
         self._get_online_features_uri = get_online_features_uri
 
-        self._features_info = {
-            "feature_id": [
+        self._features_info = FeaturesInfo(
+            feature_id=[
                 "5dbfb549",
                 "ea2f676f",
                 "0ad63312",
@@ -43,7 +44,7 @@ class PredictionServerWithFeatureStore(ABC):
                 "1d34889f",
                 "915a0c3c",
             ],
-            "feature_name": [
+            feature_name=[
                 "layout_style_AB",
                 "layout_style_RU",
                 "layout_style_GY",
@@ -55,7 +56,7 @@ class PredictionServerWithFeatureStore(ABC):
                 "category_Shirt",
                 "layout_style_DX",
             ],
-            "source_table_name": [
+            source_table_name=[
                 "ctr",
                 "ctr",
                 "ctr",
@@ -67,7 +68,7 @@ class PredictionServerWithFeatureStore(ABC):
                 "ctr",
                 "ctr",
             ],
-            "source_column_name": [
+            source_column_name=[
                 "layout_style",
                 "layout_style",
                 "layout_style",
@@ -79,7 +80,7 @@ class PredictionServerWithFeatureStore(ABC):
                 "category",
                 "layout_style",
             ],
-            "feature_function_type": [
+            feature_function_type=[
                 "string_mapping",
                 "string_mapping",
                 "string_mapping",
@@ -91,7 +92,7 @@ class PredictionServerWithFeatureStore(ABC):
                 "string_mapping",
                 "string_mapping",
             ],
-        }
+        )
 
     def get_predictions(
         self, eligible_ads: List[EligibleAd], bid_request: BidRequest
@@ -102,15 +103,16 @@ class PredictionServerWithFeatureStore(ABC):
                 eligible_ad=eligible_ad, bid_request=bid_request
             )
             online_feature = requests.post(
-                self._get_online_features_uri, json=online_feature_input
+                self._get_online_features_uri, json=asdict(online_feature_input)
             ).json()
+
             online_features.append(online_feature)
-        return requests.post(self._model_uri, json=online_features).json()
+        return requests.post(self._model_uri, json={"inputs": online_features}).json()
 
     def load_feature_info(self) -> None:
-        response = requests.get(self._feature_store_uri)
+        response = requests.get(self._list_feature_uri)
         features_info = response.json()
-        self._features_info = dataclass.from_dict(features_info, FeaturesInfo)
+        self._features_info = from_dict(data_class=FeaturesInfo, data=features_info)
 
     def _get_online_feature_input(
         self, eligible_ad: EligibleAd, bid_request: BidRequest

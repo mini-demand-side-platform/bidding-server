@@ -50,6 +50,7 @@ class Postgresql(Database):
             row_dict = {}
             for i in range(len(row)):
                 row_dict[column_names[i]] = row[i]
+            res.append(row_dict)
         cur.close()
         conn.close()
         return res

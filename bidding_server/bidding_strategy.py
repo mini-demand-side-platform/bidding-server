@@ -19,10 +19,20 @@ class ClickPerCost(BiddingStrategy):
         eligible_ads: List[EligibleAd],
         ctr_list: List[float],
     ) -> Bid:
-        bid = Bid(ad_id=None, price=0)
+        """Will bid on the ad with the highest price.
+
+        Args:
+            eligible_ads (List[EligibleAd]): A list of eligible ad.
+            ctr_list (List[float]): A list of click through rate prediction.
+
+        Returns:
+            Bid: The decided bid.
+        """
+        bid = Bid(ad_id=-1, price=-1)
         for i in range(len(ctr_list)):
             ad_price = ctr_list[i] * eligible_ads[i].bidding_cpc
             if ad_price > bid.price:
                 bid.ad_id = eligible_ads[i].ad_id
                 bid.price = ad_price
+
         return bid
