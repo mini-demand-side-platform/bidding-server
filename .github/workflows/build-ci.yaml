@@ -24,10 +24,10 @@ jobs:
     - name: Build the Docker image
       run: |
         echo ${RELEASE_VERSION}
-        docker build . --file ./docker/Dockerfile --tag raywu60kg/bidding_server:${RELEASE_VERSION}
+        docker build . --file ./docker/Dockerfile --tag raywu60kg/bidding-server:${RELEASE_VERSION}
     - name: Docker Push
-      run: docker push raywu60kg/bidding_server:${RELEASE_VERSION}
+      run: docker push raywu60kg/bidding-server:${RELEASE_VERSION}
     - name: Docker Push latest
       run: |
-        docker tag raywu60kg/bidding_server:${RELEASE_VERSION} raywu60kg/bidding_server:latest
-        docker push raywu60kg/bidding_server:latest
+        docker tag raywu60kg/bidding-server:${RELEASE_VERSION} raywu60kg/bidding-server:latest
+        docker push raywu60kg/bidding-server:latest
