@@ -9,14 +9,25 @@ oltp_server_info = DBServerInfo(
     username=os.getenv("oltp_username", "dsp"),
     password=os.getenv("oltp_password", "dsppassword"),
 )
-
+feature_store_hostname = os.getenv("feature_store_hostname", "localhost")
+feature_store_id = os.getenv("feature_store_id", "cdc74d4c")
 list_feature_uri = os.getenv(
-    "list_feature_uri", "http://localhost:8000/feature_store/{feature_store_id}/feature"
+    "list_feature_uri",
+    "http://{feature_store_hostname}:8000/feature_store/{feature_store_id}/feature".format(
+        feature_store_hostname=feature_store_hostname, feature_store_id=feature_store_id
+    ),
 )
 get_online_features_uri = os.getenv(
-    "get_online_features_uri", "http://localhost:8000/online_features"
+    "get_online_features_uri",
+    "http://{feature_store_hostname}:8000/online_features".format(
+        feature_store_hostname=feature_store_hostname
+    ),
 )
-model_uri = os.getenv("model_uri", "http://localhost:8002/model:predict")
+model_hostname = os.getenv("model_hostname", "localhost")
+model_uri = os.getenv(
+    "model_uri",
+    "http://{model_hostname}:8002/model:predict".format(model_hostname=model_hostname),
+)
 table_name = os.getenv("table_name", "ad")
-feature_store_id = os.getenv("feature_store_id", "cdc74d4c")
+
 default_ctr = float(os.getenv("default_ctr", 0.009905203839797677))

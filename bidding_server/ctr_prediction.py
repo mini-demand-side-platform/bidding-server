@@ -22,13 +22,10 @@ class PredictionServerWithFeatureStore(ABC):
         self,
         model_uri: str,
         list_feature_uri: str,
-        feature_store_id: str,
         get_online_features_uri: str,
     ) -> None:
         self._model_uri = model_uri
-        self._list_feature_uri = list_feature_uri.format(
-            feature_store_id=feature_store_id
-        )
+        self._list_feature_uri = list_feature_uri
         self._get_online_features_uri = get_online_features_uri
 
         self._features_info = FeaturesInfo(

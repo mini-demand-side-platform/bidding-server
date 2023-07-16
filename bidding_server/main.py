@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from .bidding_strategy import ClickPerCost
 from .config import (
     default_ctr,
-    feature_store_id,
     get_online_features_uri,
     list_feature_uri,
     model_uri,
@@ -24,7 +23,6 @@ get_ad = GetAdsFromDatabase(table_name=table_name, database=db)
 ctr_prediction = PredictionServerWithFeatureStore(
     model_uri=model_uri,
     list_feature_uri=list_feature_uri,
-    feature_store_id=feature_store_id,
     get_online_features_uri=get_online_features_uri,
 )
 bidding_stratepy = ClickPerCost()
