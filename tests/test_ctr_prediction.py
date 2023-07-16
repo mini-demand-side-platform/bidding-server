@@ -8,7 +8,6 @@ class TestCtrPrediction(TestCase):
     cp = PredictionServerWithFeatureStore(
         model_uri="http://localhost:8002/model:predict",
         list_feature_uri="http://localhost:8000/feature_store/{feature_store_id}/feature",
-        feature_store_id="test_id",
         get_online_features_uri="http://localhost:8000/online_features",
     )
 

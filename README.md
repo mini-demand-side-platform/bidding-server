@@ -1,3 +1,6 @@
+![Build](https://github.com/mini-demand-side-platform/bidding-server/workflows/build/badge.svg)
+![Test](https://github.com/mini-demand-side-platform/bidding-server/workflows/test/badge.svg)
+
 # bidding-server
 
 ```
