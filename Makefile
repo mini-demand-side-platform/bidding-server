@@ -11,6 +11,6 @@ build-dev: ## build image
 	docker build -t mini-demand-side-platform/bidding_server:dev -f ./docker/Dockerfile .
 
 run-dev: ## run image locally
-	docker run -it --rm --network databases_default -p 8003:8003 \
+	docker run -it --rm --network mini-demand-side-platform -p 8003:8003 \
 	-e oltp_host='postgresql' \
 	mini-demand-side-platform/bidding_server:dev

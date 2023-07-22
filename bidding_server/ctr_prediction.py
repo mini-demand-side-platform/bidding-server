@@ -27,73 +27,20 @@ class PredictionServerWithFeatureStore(ABC):
         self._model_uri = model_uri
         self._list_feature_uri = list_feature_uri
         self._get_online_features_uri = get_online_features_uri
-
-        self._features_info = FeaturesInfo(
-            feature_id=[
-                "5dbfb549",
-                "ea2f676f",
-                "0ad63312",
-                "a2480212",
-                "5aae0b22",
-                "65934929",
-                "2658049e",
-                "717456fc",
-                "1d34889f",
-                "915a0c3c",
-            ],
-            feature_name=[
-                "layout_style_AB",
-                "layout_style_RU",
-                "layout_style_GY",
-                "layout_style_MR",
-                "layout_style_BK",
-                "layout_style_BX",
-                "layout_style_RZ",
-                "layout_style_TY",
-                "category_Shirt",
-                "layout_style_DX",
-            ],
-            source_table_name=[
-                "ctr",
-                "ctr",
-                "ctr",
-                "ctr",
-                "ctr",
-                "ctr",
-                "ctr",
-                "ctr",
-                "ctr",
-                "ctr",
-            ],
-            source_column_name=[
-                "layout_style",
-                "layout_style",
-                "layout_style",
-                "layout_style",
-                "layout_style",
-                "layout_style",
-                "layout_style",
-                "layout_style",
-                "category",
-                "layout_style",
-            ],
-            feature_function_type=[
-                "string_mapping",
-                "string_mapping",
-                "string_mapping",
-                "string_mapping",
-                "string_mapping",
-                "string_mapping",
-                "string_mapping",
-                "string_mapping",
-                "string_mapping",
-                "string_mapping",
-            ],
-        )
+        try:
+            self._features_info = self._load_feature_info()
+            log.info("Loaded feature info")
+        except Exception as e:
+            log.error("Error during load the feature info: {error}".format(error=e))
+            self._features_info = None
 
     def get_predictions(
         self, eligible_ads: List[EligibleAd], bid_request: BidRequest
     ) -> List[float]:
+        if self._features_info is None:
+            self._features_info = self._features_info()
+            if self._features_info is None:
+                raise AttributeError("feature_info is None")
         online_features = []
         for eligible_ad in eligible_ads:
             online_feature_input = self._get_online_feature_input(
@@ -106,7 +53,7 @@ class PredictionServerWithFeatureStore(ABC):
             online_features.append(online_feature)
         return requests.post(self._model_uri, json={"inputs": online_features}).json()
 
-    def load_feature_info(self) -> None:
+    def _load_feature_info(self) -> None:
         response = requests.get(self._list_feature_uri)
         features_info = response.json()
         self._features_info = from_dict(data_class=FeaturesInfo, data=features_info)
