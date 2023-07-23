@@ -2,14 +2,14 @@
 ![Test](https://github.com/mini-demand-side-platform/bidding-server/workflows/test/badge.svg)
 
 # Bidding Server
-This is the bidder server in the [mini-demand-side-platform](https://github.com/mini-demand-side-platform/mini-demand-side-platform). The bidder server handles bid request and returns the most suable ads and price. 
+This is the bidder server of the [mini-demand-side-platform](https://github.com/mini-demand-side-platform/mini-demand-side-platform). The bidder server handles bid request and returns the most suitable ads and price. 
 
 When the server received a bid request, it
 
-1. Gets the eligble ads in the database.
+1. Gets the eligible ads in the database.
 2. Does the feature engineering by custom feature store service.  
 3. Makes the click through rate prediction.
-4. Based on the click through rate, comes up a suable price.
+4. Based on the click through rate, comes up a suitable price.
 
 See the whole bidding flow [here](https://github.com/mini-demand-side-platform/mini-demand-side-platform).
 
@@ -42,7 +42,7 @@ Expected return
 - make
 
 ## Setup
-#### 1. Active databases 
+#### 1. Activate databases 
 ```
 git clone git@github.com:mini-demand-side-platform/databases.git
 cd databases 
